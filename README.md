@@ -3,6 +3,9 @@ Allows you to set up custom easter eggs for the reworked settings interface.
 
 ![Example custom egg](egg_example.png)
 
+## Current Limitations
+The plugin will only apply custom easter eggs if the search result returns the default "Nothing Found" message.
+
 ## Usage
 In the plugin's config, simply add your eggs in the following format:
 ```
