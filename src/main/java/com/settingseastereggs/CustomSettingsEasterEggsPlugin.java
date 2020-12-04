@@ -97,13 +97,16 @@ public class CustomSettingsEasterEggsPlugin extends Plugin
 	private void loadEasterMap(String str)
 	{
 		easterMap.clear();
-		String[] eggs = str.split("\n");
-		for (String egg : eggs)
+		for (String egg : str.split("\n"))
 		{
 			String[] searchReplace = egg.split("=");
 			if (searchReplace.length >= 2)
 			{
-				easterMap.put(searchReplace[0].trim().toLowerCase(), searchReplace[1].trim());
+				String replace = searchReplace[1].trim();
+				for (String subegg : searchReplace[0].split("&"))
+				{
+					easterMap.put(subegg.trim().toLowerCase(), replace);
+				}
 			}
 		}
 	}

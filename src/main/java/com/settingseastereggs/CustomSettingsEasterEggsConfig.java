@@ -13,11 +13,12 @@ public interface CustomSettingsEasterEggsConfig extends Config
 	@ConfigItem(
 		keyName = EASTER_EGG_REPLACEMENTS_KEY_NAME,
 		name = "Easter Egg Replacements",
-		description = "Format: 'SearchText = Egg', separate entries on new lines."
+		description = "Format: 'SearchText [& Alt1 & Al2...] = Egg', separate entries on new lines."
 	)
 	default String easterEggReplacements()
 	{
 		return "I am your father = Nooooooooooooooooooooooooo!" +
-			"\nIll be back = Come with me if you want to live.";
+			"\nIll be back = Come with me if you want to live." +
+			"\nMurder & Redrum = All rest and no play makes Guthix a dull boy.";
 	}
 }
