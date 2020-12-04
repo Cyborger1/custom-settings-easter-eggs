@@ -1,9 +1,11 @@
 package com.settingseastereggs;
 
+import com.google.common.base.Splitter;
 import com.google.inject.Provides;
 import java.util.HashMap;
 import java.util.Map;
 import javax.inject.Inject;
+import javax.swing.JOptionPane;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
 import net.runelite.api.events.ScriptPostFired;
@@ -38,6 +40,15 @@ public class CustomSettingsEasterEggsPlugin extends Plugin
 
 	private static final String NO_RESULT_STRING = "<br><br>Could not find any settings that match what you are looking for.<br><br>Try searching for something else.";
 
+	private static final Splitter.MapSplitter EGG_MAP_SPLITTER = Splitter.on('\n')
+		.trimResults()
+		.omitEmptyStrings()
+		.withKeyValueSeparator("=>");
+
+	private static final Splitter SUB_EGG_SPLITTER = Splitter.on('&')
+		.trimResults()
+		.omitEmptyStrings();
+
 	@Override
 	protected void startUp() throws Exception
 	{
@@ -55,17 +66,14 @@ public class CustomSettingsEasterEggsPlugin extends Plugin
 	{
 		if (event.getScriptId() == 3876)
 		{
-			Widget search = client.getWidget(134, 10);
+			String search = client.getVarcStrValue(417);
 			Widget result = client.getWidget(134, 17);
 			if (search != null && result != null)
 			{
 				Widget resultChild = result.getChild(0);
 				if (resultChild != null && resultChild.getText().equals(NO_RESULT_STRING))
 				{
-					String text = Text.removeTags(search.getText());
-					text = text.substring(0, text.length() - 1).toLowerCase();
-
-					String egg = easterMap.get(text);
+					String egg = easterMap.get(Text.removeTags(search).toLowerCase());
 					if (egg != null)
 					{
 						resultChild.setText(egg);
@@ -97,16 +105,27 @@ public class CustomSettingsEasterEggsPlugin extends Plugin
 	private void loadEasterMap(String str)
 	{
 		easterMap.clear();
-		for (String egg : str.split("\n"))
+		try
 		{
-			String[] searchReplace = egg.split("=");
-			if (searchReplace.length >= 2)
+			EGG_MAP_SPLITTER.split(str).forEach((k, v) ->
 			{
-				String replace = searchReplace[1].trim();
-				for (String subegg : searchReplace[0].split("&"))
+				for (String subegg : SUB_EGG_SPLITTER.split(k))
 				{
-					easterMap.put(subegg.trim().toLowerCase(), replace);
+					easterMap.put(subegg.toLowerCase(), v);
 				}
+			});
+		}
+		catch (IllegalArgumentException iae)
+		{
+			if (config.showErrorMessage())
+			{
+				String error =
+					"Invalid entry in custom settings easter eggs config." +
+						"\n" + iae.getMessage();
+
+				JOptionPane.showOptionDialog(null, error,
+					"Custom Settings Easter Eggs", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE,
+					null, new String[]{"Ok"}, "Ok");
 			}
 		}
 	}

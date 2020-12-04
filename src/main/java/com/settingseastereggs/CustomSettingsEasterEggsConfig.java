@@ -13,12 +13,24 @@ public interface CustomSettingsEasterEggsConfig extends Config
 	@ConfigItem(
 		keyName = EASTER_EGG_REPLACEMENTS_KEY_NAME,
 		name = "Easter Egg Replacements",
-		description = "Format: 'SearchText [& Alt1 & Al2...] = Egg', separate entries on new lines."
+		description = "Format: 'SearchText [& Alt1 & Al2...] => Egg', separate entries on new lines.",
+		position = 1
 	)
 	default String easterEggReplacements()
 	{
-		return "I am your father = Nooooooooooooooooooooooooo!" +
-			"\nIll be back = Come with me if you want to live." +
-			"\nMurder & Redrum = All rest and no play makes Guthix a dull boy.";
+		return "I am your father => Nooooooooooooooooooooooooo!" +
+			"\nIll be back => Come with me if you want to live." +
+			"\nMurder & Redrum => All rest and no play makes <col=00ff00>Guthix</col> a dull boy.";
+	}
+
+	@ConfigItem(
+		keyName = "showErrorMessage",
+		name = "Show Error Message",
+		description = "Show an error dialog box when the replacements are unable to be parsed correctly.",
+		position = 2
+	)
+	default boolean showErrorMessage()
+	{
+		return true;
 	}
 }
