@@ -1,5 +1,6 @@
 # Custom Settings Easter Eggs
 Allows you to set up custom easter eggs for the reworked settings interface.
+
 ![Example custom egg](egg_example.png)
 
 ## Usage
