@@ -22,15 +22,4 @@ public interface CustomSettingsEasterEggsConfig extends Config
 			"\nIll be back => Come with me if you want to live." +
 			"\nMurder & Redrum => All rest and no play makes <col=00ff00>Guthix</col> a dull boy.";
 	}
-
-	@ConfigItem(
-		keyName = "showErrorMessage",
-		name = "Show Error Message",
-		description = "Show an error dialog box when the replacements are unable to be parsed correctly.",
-		position = 2
-	)
-	default boolean showErrorMessage()
-	{
-		return true;
-	}
 }
