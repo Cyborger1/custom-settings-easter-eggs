@@ -38,7 +38,7 @@ public class CustomSettingsEasterEggsPlugin extends Plugin
 
 	private static final String NO_RESULT_STRING = "<br><br>Could not find any settings that match what you are looking for.<br><br>Try searching for something else.";
 
-	private static final Splitter NEW_LINE_SPLITTER = Splitter.on('\n')
+	private static final Splitter NEW_LINE_SPLITTER = Splitter.onPattern("\\r?\\n")
 		.trimResults()
 		.omitEmptyStrings();
 
