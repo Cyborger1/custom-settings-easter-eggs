@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
 import net.runelite.api.events.ScriptPostFired;
 import net.runelite.api.widgets.Widget;
+import net.runelite.api.widgets.WidgetID;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.events.ConfigChanged;
@@ -36,7 +37,7 @@ public class CustomSettingsEasterEggsPlugin extends Plugin
 
 	private final Map<String, String> easterMap = new HashMap<>();
 
-	private static final String NO_RESULT_STRING = "<br><br>Could not find any settings that match what you are looking for.<br><br>Try searching for something else.";
+	private static final String NO_RESULT_STRING = "Could not find any settings that match what you are looking for.";
 
 	private static final Splitter NEW_LINE_SPLITTER = Splitter.onPattern("\\r?\\n")
 		.trimResults()
@@ -64,27 +65,37 @@ public class CustomSettingsEasterEggsPlugin extends Plugin
 	@Subscribe
 	public void onScriptPostFired(ScriptPostFired event)
 	{
-		if (event.getScriptId() == 3876)
+		// Settings search event
+		if (event.getScriptId() != 3876)
 		{
-			String search = client.getVarcStrValue(417);
-			Widget result = client.getWidget(134, 17);
-			if (search != null && result != null)
-			{
-				Widget resultChild = result.getChild(0);
-				if (resultChild != null && resultChild.getText().equals(NO_RESULT_STRING))
-				{
-					String egg = easterMap.get(search.toLowerCase());
-					if (egg != null)
-					{
-						resultChild.setText(egg);
-						resultChild.setOriginalHeight(20);
-						resultChild.setOriginalWidth(20);
-						resultChild.setXPositionMode(1);
-						resultChild.setYPositionMode(1);
-						resultChild.revalidate();
-					}
-				}
-			}
+			return;
+		}
+
+		// Get search string and results widget
+		String search = client.getVarcStrValue(417);
+		Widget result = client.getWidget(WidgetID.SETTINGS_GROUP_ID, 18);
+		if (search == null || result == null)
+		{
+			return;
+		}
+
+		// Get results first dynamic child (contains the actual text), check if it's a "no results" page
+		Widget resultChild = result.getChild(0);
+		if (resultChild == null || !resultChild.getText().contains(NO_RESULT_STRING))
+		{
+			return;
+		}
+
+		// Apply the easter egg if search string is a match
+		String egg = easterMap.get(search.toLowerCase());
+		if (egg != null)
+		{
+			resultChild.setText(egg);
+			resultChild.setOriginalHeight(20);
+			resultChild.setOriginalWidth(20);
+			resultChild.setXPositionMode(1);
+			resultChild.setYPositionMode(1);
+			resultChild.revalidate();
 		}
 	}
 
